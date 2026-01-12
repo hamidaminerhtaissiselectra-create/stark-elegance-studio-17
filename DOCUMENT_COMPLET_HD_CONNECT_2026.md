@@ -10,9 +10,8 @@
 3. [Analyse SEO 2026-2027 & Risques](#analyse-seo-2026-2027--risques)
 4. [Stratégie SEO Complète Multi-Services](#stratégie-seo-complète-multi-services)
 5. [Plan d'Action Détaillé](#plan-daction-détaillé)
-6. [Calendrier de Déploiement](#calendrier-de-déploiement)
-7. [Métriques & KPIs](#métriques--kpis)
-8. [Ressources & Outils](#ressources--outils)
+6. [Métriques & KPIs](#métriques--kpis)
+7. [Ressources & Outils](#ressources--outils)
 
 ---
 
@@ -1707,55 +1706,7 @@ Accueil
 
 ---
 
-# CALENDRIER DE DÉPLOIEMENT
-
-## Timeline Complète - 24 Semaines
-
-```
-SEMAINE 1-2 : AUDIT & PRÉPARATION
-├── Audit SEO complet
-├── Audit UX complet
-├── Audit Technique complet
-└── Planification détaillée
-
-SEMAINE 3-4 : CORRECTIONS CRITIQUES
-├── Corriger meta tags
-├── Corriger accessibilité
-├── Configurer Google Analytics 4
-└── Configurer Resend API
-
-SEMAINE 5-8 : TIER 1 (6 VILLES)
-├── Créer 24 pages (6 villes × 4 services)
-├── Contenu 1000-1500 mots
-├── Créer 6 GBP
-└── Indexer & monitorer
-
-SEMAINE 9-12 : TIER 2 (24 VILLES)
-├── Créer 96 pages (24 villes × 4 services)
-├── Contenu 500-800 mots
-├── Créer 24 GBP
-└── Indexer & monitorer
-
-SEMAINE 13-18 : TIER 3 (70 VILLES)
-├── Créer 280 pages (70 villes × 4 services)
-├── Contenu 300-500 mots
-├── Créer 70 GBP
-└── Indexer & monitorer
-
-SEMAINE 19-22 : BLOG & BACKLINKS
-├── Créer 5 articles piliers
-├── Créer 20 articles satellites
-└── Lancer campagne de backlinks
-
-SEMAINE 23-24 : MONITORING & OPTIMISATION
-├── Mettre en place monitoring
-├── Analyser performances
-├── Optimiser pages faibles
-└── Analyser positions de ranking
-```
-
----
-
+#
 # MÉTRIQUES & KPIs
 
 ## Objectifs à 6 Mois
