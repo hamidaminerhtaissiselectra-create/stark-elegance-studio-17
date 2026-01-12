@@ -1,0 +1,98 @@
+[
+  {
+    "city": "Paris",
+    "dept": "75",
+    "prio": 1,
+    "slug": "paris",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Paris (75)",
+    "image_url": "/assets/local/paris.jpg"
+  },
+  {
+    "city": "Cr\u00e9teil",
+    "dept": "94",
+    "prio": 1,
+    "slug": "creteil",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Cr\u00e9teil (94)",
+    "image_url": "/assets/local/creteil.jpg"
+  },
+  {
+    "city": "Saint-Maur-des-Foss\u00e9s",
+    "dept": "94",
+    "prio": 1,
+    "slug": "saint-maur-des-fosses",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Saint-Maur-des-Foss\u00e9s (94)",
+    "image_url": "/assets/local/saint-maur-des-fosses.jpg"
+  },
+  {
+    "city": "Vitry-sur-Seine",
+    "dept": "94",
+    "prio": 1,
+    "slug": "vitry-sur-seine",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Vitry-sur-Seine (94)",
+    "image_url": "/assets/local/vitry-sur-seine.jpg"
+  },
+  {
+    "city": "Lyon",
+    "dept": "69",
+    "prio": 2,
+    "slug": "lyon",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Lyon (69)",
+    "image_url": "/assets/local/lyon.jpg"
+  },
+  {
+    "city": "Marseille",
+    "dept": "13",
+    "prio": 2,
+    "slug": "marseille",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Marseille (13)",
+    "image_url": "/assets/local/marseille.jpg"
+  },
+  {
+    "city": "Bordeaux",
+    "dept": "33",
+    "prio": 2,
+    "slug": "bordeaux",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Bordeaux (33)",
+    "image_url": "/assets/local/bordeaux.jpg"
+  },
+  {
+    "city": "Toulouse",
+    "dept": "31",
+    "prio": 2,
+    "slug": "toulouse",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Toulouse (31)",
+    "image_url": "/assets/local/toulouse.jpg"
+  },
+  {
+    "city": "Lille",
+    "dept": "59",
+    "prio": 2,
+    "slug": "lille",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Lille (59)",
+    "image_url": "/assets/local/lille.jpg"
+  },
+  {
+    "city": "Strasbourg",
+    "dept": "67",
+    "prio": 2,
+    "slug": "strasbourg",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Strasbourg (67)",
+    "image_url": "/assets/local/strasbourg.jpg"
+  },
+  {
+    "city": "Nantes",
+    "dept": "44",
+    "prio": 2,
+    "slug": "nantes",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Nantes (44)",
+    "image_url": "/assets/local/nantes.jpg"
+  },
+  {
+    "city": "Nice",
+    "dept": "06",
+    "prio": 2,
+    "slug": "nice",
+    "alt_text": "Installation de syst\u00e8mes de s\u00e9curit\u00e9 par HD Connect \u00e0 Nice (06)",
+    "image_url": "/assets/local/nice.jpg"
+  }
+]

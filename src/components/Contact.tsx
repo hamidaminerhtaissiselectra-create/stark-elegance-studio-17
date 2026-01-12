@@ -1,180 +1,316 @@
-import { Phone, Mail, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
+import { content } from "@/data/content";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Le nom est requis").max(100, "Le nom ne doit pas dépasser 100 caractères"),
+  email: z.string().trim().email("Email invalide").max(255, "L'email ne doit pas dépasser 255 caractères"),
+  phone: z.string().trim().min(1, "Le téléphone est requis").max(20, "Le téléphone ne doit pas dépasser 20 caractères"),
+  message: z.string().trim().min(1, "Le message est requis").max(1000, "Le message ne doit pas dépasser 1000 caractères"),
+});
+
+type RequestType = 'quote' | 'info' | 'emergency';
 
 const Contact = () => {
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: "Téléphone",
-      value: "0 800 123 456",
-      subValue: "Appel gratuit depuis un fixe",
-      href: "tel:0800123456",
-    },
-    {
-      icon: Mail,
-      title: "Email",
-      value: "contact@hdconnect.fr",
-      subValue: "Réponse sous 24h",
-      href: "mailto:contact@hdconnect.fr",
-    },
-    {
-      icon: MapPin,
-      title: "Siège social",
-      value: "123 Avenue de la Sécurité",
-      subValue: "33000 Bordeaux",
-      href: null,
-    },
-    {
-      icon: Clock,
-      title: "Horaires",
-      value: "Lun-Ven : 8h-19h",
-      subValue: "Urgences : 24/7",
-      href: null,
-    },
-  ];
+  const { toast } = useToast();
+  const companyInfo = content.company.contact;
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [requestType, setRequestType] = useState<RequestType>('quote');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setIsSubmitting(true);
+      
+      // Validate form data
+      const validatedData = contactSchema.parse(formData);
+
+      const typeLabels = {
+        quote: 'Devis',
+        info: 'Information',
+        emergency: 'Urgence'
+      };
+      
+      // 1. Enregistrement dans Supabase
+      const { supabaseClient } = await import("@/lib/supabase");
+      
+      const { data: requestData, error: insertError } = await supabaseClient
+        .from('customer_requests')
+        .insert([
+          {
+            name: validatedData.name,
+            email: validatedData.email,
+            phone: validatedData.phone,
+            message: validatedData.message,
+            request_type: requestType,
+            status: 'new',
+          }
+        ])
+        .select();
+
+      if (insertError) {
+        console.error('Erreur Supabase lors de l\'insertion:', insertError);
+        throw new Error('Erreur lors de l\'enregistrement de la demande.');
+      }
+
+      // 2. Envoi de l'email de confirmation via edge function
+      try {
+        await supabaseClient.functions.invoke('send-quote-email', {
+          body: {
+            confirmationOnly: true,
+            clientName: validatedData.name,
+            clientEmail: validatedData.email,
+            requestType: typeLabels[requestType],
+          }
+        });
+      } catch (emailError) {
+        console.error('Erreur envoi email:', emailError);
+      }
+
+      toast({
+        title: "Message envoyé !",
+        description: "Nous vous recontacterons rapidement.",
+      });
+
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      setRequestType('quote');
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Erreur de validation",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        console.error('Erreur lors de l\'envoi:', error);
+        toast({
+          title: "Erreur",
+          description: error instanceof Error ? error.message : "Une erreur s'est produite. Veuillez réessayer.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   return (
-    <section className="py-20 lg:py-32 bg-secondary text-secondary-foreground">
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="grid lg:grid-cols-2 gap-16">
-          {/* Left Content */}
-          <div>
-            <span className="text-label text-primary mb-4 block">Contact</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl text-section mb-6">
-              Besoin d'un devis ou d'informations ?
-            </h2>
-            <p className="text-lg text-secondary-foreground/80 mb-8">
-              Nos conseillers sont à votre écoute pour répondre à toutes vos questions 
-              et vous proposer une solution adaptée à vos besoins.
-            </p>
-            
-            {/* Contact Grid */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              {contactInfo.map((info, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center gap-2 text-primary">
-                    <info.icon className="w-5 h-5" />
-                    <span className="text-sm font-medium">{info.title}</span>
-                  </div>
-                  {info.href ? (
-                    <a href={info.href} className="block">
-                      <div className="font-semibold text-secondary-foreground hover:text-primary transition-colors">
-                        {info.value}
-                      </div>
-                      <div className="text-sm text-secondary-foreground/60">{info.subValue}</div>
-                    </a>
-                  ) : (
-                    <div>
-                      <div className="font-semibold text-secondary-foreground">{info.value}</div>
-                      <div className="text-sm text-secondary-foreground/60">{info.subValue}</div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="btn-gradient-accent rounded-full">
-                <Link to="/devis">
-                  Demander un devis gratuit
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10">
-                <a href="tel:0800123456">
-                  <Phone className="mr-2 w-5 h-5" />
-                  Appeler maintenant
-                </a>
-              </Button>
-            </div>
+    <section id="contact" className="section-padding bg-gradient-to-br from-primary/5 via-secondary/30 to-accent/5 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 pattern-dots opacity-30"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-4">
+            <Phone className="w-4 h-4" />
+            <span>Contact Direct</span>
           </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            {content.contact.title}
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            {content.contact.subtitle}
+          </p>
+        </div>
+
+        {/* Formulaire en premier */}
+        <Card className="max-w-2xl mx-auto mb-10 shadow-2xl border-0 bg-card/80 backdrop-blur-sm overflow-hidden">
+          {/* Gradient top bar */}
+          <div className="h-1.5 bg-gradient-to-r from-primary via-accent to-primary"></div>
           
-          {/* Right - Quick Quote Form */}
-          <div className="bg-card text-card-foreground rounded-3xl p-8 lg:p-10">
-            <h3 className="text-2xl font-semibold mb-6">Demande rapide</h3>
-            
-            <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Prénom *</label>
-                  <input 
-                    type="text" 
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    placeholder="Votre prénom"
-                    autoComplete="given-name"
-                    required
-                  />
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-2xl md:text-3xl font-bold">{content.contact.formTitle}</CardTitle>
+            <CardDescription className="text-base">Remplissez ce formulaire et nous vous recontacterons rapidement</CardDescription>
+          </CardHeader>
+          <CardContent className="px-6 sm:px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-foreground">Type de demande</label>
+                <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                  <Button
+                    type="button"
+                    variant={requestType === 'quote' ? 'default' : 'outline'}
+                    onClick={() => setRequestType('quote')}
+                    className={cn(
+                      "w-full h-12 text-xs sm:text-sm transition-all duration-300",
+                      requestType === 'quote' && "bg-gradient-to-r from-primary to-accent shadow-lg scale-105"
+                    )}
+                  >
+                    📋 Devis
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={requestType === 'info' ? 'default' : 'outline'}
+                    onClick={() => setRequestType('info')}
+                    className={cn(
+                      "w-full h-12 text-xs sm:text-sm transition-all duration-300",
+                      requestType === 'info' && "bg-gradient-to-r from-primary to-accent shadow-lg scale-105"
+                    )}
+                  >
+                    ℹ️ Info
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={requestType === 'emergency' ? 'default' : 'outline'}
+                    onClick={() => setRequestType('emergency')}
+                    className={cn(
+                      "w-full h-12 text-xs sm:text-sm transition-all duration-300",
+                      requestType === 'emergency' && "bg-gradient-to-r from-destructive to-red-600 shadow-lg scale-105"
+                    )}
+                  >
+                    🚨 Urgence
+                  </Button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Nom *</label>
-                  <input 
-                    type="text" 
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    placeholder="Votre nom"
-                    autoComplete="family-name"
-                    required
-                  />
-                </div>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Téléphone *</label>
-                <input 
-                  type="tel" 
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="06 00 00 00 00"
-                  autoComplete="tel"
+
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-sm font-medium text-foreground">
+                  Nom complet
+                </label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Jean Dupont"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                 />
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Email *</label>
-                <input 
-                  type="email" 
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="votre@email.fr"
-                  autoComplete="email"
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-foreground">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="jean.dupont@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                 />
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Code postal *</label>
-                <input 
-                  type="text" 
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="33000"
-                  autoComplete="postal-code"
+
+              <div className="space-y-2">
+                <label htmlFor="phone" className="text-sm font-medium text-foreground">
+                  Téléphone
+                </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="06 12 34 56 78"
+                  value={formData.phone}
+                  onChange={handleChange}
                   required
                 />
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Service souhaité</label>
-                <select className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                  <option value="">Sélectionnez un service</option>
-                  <option value="alarme">Alarme Résidentielle</option>
-                  <option value="video">Vidéosurveillance</option>
-                  <option value="telesurveillance">Télésurveillance 24/7</option>
-                  <option value="depannage">Dépannage Urgent</option>
-                  <option value="pack">Pack Complet</option>
-                </select>
+
+              <div className="space-y-2">
+                <label htmlFor="message" className="text-sm font-medium text-foreground">
+                  Message
+                </label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  placeholder="Décrivez votre projet ou votre besoin..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={5}
+                  required
+                />
               </div>
-              
-              <Button type="submit" className="w-full btn-gradient-primary rounded-full py-6 text-lg">
-                Envoyer ma demande
-                <ArrowRight className="ml-2 w-5 h-5" />
+
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] text-base font-semibold"
+                size="lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Envoi en cours..." : "✉️ Envoyer la demande"}
               </Button>
               
-              <p className="text-xs text-muted-foreground text-center">
-                En soumettant ce formulaire, vous acceptez d'être contacté par HD Connect. 
-                Vos données sont protégées conformément au RGPD.
+              {/* Trust text */}
+              <p className="text-center text-sm text-muted-foreground mt-4">
+                ✓ Sans engagement • ✓ Réponse sous 24h • ✓ Données sécurisées
               </p>
             </form>
-          </div>
+          </CardContent>
+        </Card>
+
+        {/* Informations de contact en dessous */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <CardHeader className="pb-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Phone className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <CardTitle className="text-lg">Téléphone</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <a href={`tel:${companyInfo.phoneMobile.replace(/\s/g, '')}`} className="text-primary font-bold text-lg hover:underline block">
+                {companyInfo.phoneMobile}
+              </a>
+              <a href={`tel:${companyInfo.phoneFixe.replace(/\s/g, '')}`} className="text-primary/80 font-medium hover:underline block">
+                {companyInfo.phoneFixe}
+              </a>
+              <p className="text-xs text-muted-foreground mt-2">9h - 18h</p>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <CardHeader className="pb-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Mail className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <CardTitle className="text-lg">Email</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <a href={`mailto:${companyInfo.email}`} className="text-primary font-bold text-base hover:underline break-all block">
+                {companyInfo.email}
+              </a>
+              <p className="text-xs text-muted-foreground mt-2">Réponse sous 24h</p>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <CardHeader className="pb-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <MapPin className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <CardTitle className="text-lg">Adresse</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <p className="text-foreground font-semibold">{companyInfo.address}</p>
+              <p className="text-xs text-muted-foreground mt-2">Toute l'Île-de-France</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

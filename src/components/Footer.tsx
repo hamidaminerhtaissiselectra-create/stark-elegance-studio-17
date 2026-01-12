@@ -1,161 +1,243 @@
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowRight,
+  Shield,
+  Award,
+  BadgeCheck,
+  Clock,
+} from "lucide-react";
+import { content } from "@/data/content";
 import { Link } from "react-router-dom";
-import { Shield, Phone, Mail, MapPin, Facebook, Linkedin, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Facebook,
+  Instagram,
+  Linkedin,
+};
+
+const trustBadges = [
+  { icon: BadgeCheck, label: "Certifié NF&A2P", description: "Référence assureurs" },
+  { icon: Award, label: "10+ ans d'expertise", description: "Techniciens certifiés" },
+  { icon: Shield, label: "Garantie 5 ans", description: "Pièces et main d'œuvre" },
+  { icon: Clock, label: "Support 24/7", description: "Intervention rapide" },
+];
 
 const Footer = () => {
-  const services = [
-    { name: "Alarme Résidentielle", href: "/services/alarme" },
-    { name: "Vidéosurveillance", href: "/services/videosurveillance" },
-    { name: "Télésurveillance 24/7", href: "/services/telesurveillance" },
-    { name: "Dépannage Urgent", href: "/services/depannage" },
-  ];
-
-  const zones = [
-    { name: "Paris & Île-de-France", href: "/zones/paris" },
-    { name: "Lyon & Rhône-Alpes", href: "/zones/lyon" },
-    { name: "Bordeaux & Nouvelle-Aquitaine", href: "/zones/bordeaux" },
-    { name: "Marseille & PACA", href: "/zones/marseille" },
-    { name: "Lille & Hauts-de-France", href: "/zones/lille" },
-    { name: "Toutes nos zones", href: "/zones" },
-  ];
-
-  const company = [
-    { name: "À propos", href: "/about" },
-    { name: "Blog", href: "/blog" },
-    { name: "Nos engagements", href: "/engagements" },
-    { name: "Recrutement", href: "/recrutement" },
-    { name: "Contact", href: "/contact" },
-  ];
-
-  const legal = [
-    { name: "Mentions légales", href: "/mentions-legales" },
-    { name: "Politique de confidentialité", href: "/confidentialite" },
-    { name: "CGV", href: "/cgv" },
-    { name: "Cookies", href: "/cookies" },
-  ];
+  const { scrollToSection } = useSmoothScroll();
+  const currentYear = new Date().getFullYear();
+  const contactInfo = content.company.contact;
+  const socialLinks = content.company.social;
+  const servicesLinks = content.services.items.map((item) => ({ title: item.title, href: item.link }));
 
   return (
-    <footer className="bg-secondary text-secondary-foreground">
+    <footer className="bg-foreground text-background relative overflow-hidden">
+      {/* Trust Badges Section */}
+      <div className="bg-gradient-to-r from-primary/90 to-accent/90 py-6">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {trustBadges.map((badge, index) => {
+              const Icon = badge.icon;
+              return (
+                <div key={index} className="flex items-center gap-3 justify-center text-white">
+                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{badge.label}</p>
+                    <p className="text-xs text-white/80">{badge.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Top CTA Section */}
+      <div className="border-b border-background/10">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-2">Prêt à sécuriser vos locaux ?</h3>
+              <p className="text-background/70">Obtenez votre devis gratuit en moins de 24h</p>
+            </div>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white"
+              onClick={() => scrollToSection("quote", { mode: "quote" })}
+            >
+              Demander un devis
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Main Footer */}
-      <div className="container mx-auto px-4 lg:px-6 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-primary-foreground" />
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Company Info */}
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold leading-tight">HD Connect</span>
-                <span className="text-xs text-secondary-foreground/60 leading-tight">Sécurité Résidentielle</span>
-              </div>
-            </Link>
-            
-            <p className="text-sm text-secondary-foreground/70 mb-6">
-              Spécialiste français de la sécurité résidentielle depuis 2010. 
-              Alarme, vidéosurveillance et télésurveillance 24/7.
-            </p>
-            
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <a href="tel:0800123456" className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
-                <Phone className="w-4 h-4 text-primary" />
-                0 800 123 456
-              </a>
-              <a href="mailto:contact@hdconnect.fr" className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
-                <Mail className="w-4 h-4 text-primary" />
-                contact@hdconnect.fr
-              </a>
-              <div className="flex items-center gap-2 text-sm text-secondary-foreground/70">
-                <MapPin className="w-4 h-4 text-primary" />
-                Bordeaux, France
+              <div>
+                <h3 className="text-xl font-bold">HD Connect</h3>
+                <p className="text-sm text-background/60">Sécurité & Technologie</p>
               </div>
             </div>
-            
-            {/* Social */}
-            <div className="flex gap-3 mt-6">
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary-foreground/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Facebook">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary-foreground/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="LinkedIn">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary-foreground/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Instagram">
-                <Instagram className="w-5 h-5" />
-              </a>
+            <p className="text-background/70 text-sm leading-relaxed mb-6">
+              Votre partenaire de confiance pour la protection de vos biens et de vos proches. Installation,
+              maintenance et dépannage de systèmes de sécurité professionnels.
+            </p>
+            <div className="flex gap-3">
+              {Object.entries(socialLinks).map(([key, href]) => {
+                const Icon = iconMap[key.charAt(0).toUpperCase() + key.slice(1)] || Linkedin;
+                return (
+                  <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-lg bg-background/10 hover:bg-primary flex items-center justify-center transition-colors"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
             </div>
           </div>
-          
+
           {/* Services */}
           <div>
-            <h4 className="font-semibold mb-4">Services</h4>
-            <ul className="space-y-2">
-              {services.map((item, index) => (
-                <li key={index}>
-                  <Link to={item.href} className="text-sm text-secondary-foreground/70 hover:text-primary transition-colors">
-                    {item.name}
+            <h4 className="font-bold text-lg mb-6">Nos Services</h4>
+            <ul className="space-y-3">
+              {servicesLinks.map((link) => (
+                <li key={link.title}>
+                  <Link
+                    to={link.href}
+                    className="text-background/70 hover:text-primary text-sm transition-colors flex items-center gap-2 group"
+                  >
+                    <ArrowRight className="w-3 h-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+                    {link.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-          
-          {/* Zones */}
+
+          {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Zones d'intervention</h4>
-            <ul className="space-y-2">
-              {zones.map((item, index) => (
-                <li key={index}>
-                  <Link to={item.href} className="text-sm text-secondary-foreground/70 hover:text-primary transition-colors">
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+            <h4 className="font-bold text-lg mb-6">Liens Utiles</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-background/70 hover:text-primary text-sm transition-colors">
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-background/70 hover:text-primary text-sm transition-colors"
+                >
+                  Services
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => scrollToSection("about")}
+                  className="text-background/70 hover:text-primary text-sm transition-colors"
+                >
+                  À Propos
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => scrollToSection("quote", { mode: "quote" })}
+                  className="text-background/70 hover:text-primary text-sm transition-colors"
+                >
+                  Demander un Devis
+                </button>
+              </li>
+              <li>
+                <Link to="/mentions-legales" className="text-background/70 hover:text-primary text-sm transition-colors">
+                  Mentions Légales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/politique-confidentialite"
+                  className="text-background/70 hover:text-primary text-sm transition-colors"
+                >
+                  Politique de Confidentialité
+                </Link>
+              </li>
             </ul>
           </div>
-          
-          {/* Company */}
+
+          {/* Contact */}
           <div>
-            <h4 className="font-semibold mb-4">Entreprise</h4>
-            <ul className="space-y-2">
-              {company.map((item, index) => (
-                <li key={index}>
-                  <Link to={item.href} className="text-sm text-secondary-foreground/70 hover:text-primary transition-colors">
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          {/* Legal */}
-          <div>
-            <h4 className="font-semibold mb-4">Informations</h4>
-            <ul className="space-y-2">
-              {legal.map((item, index) => (
-                <li key={index}>
-                  <Link to={item.href} className="text-sm text-secondary-foreground/70 hover:text-primary transition-colors">
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+            <h4 className="font-bold text-lg mb-6">Contact</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Phone className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <a href={`tel:${contactInfo.phoneMobile}`} className="text-background hover:text-primary transition-colors block font-medium">
+                    {contactInfo.phoneMobile}
+                  </a>
+                  <a
+                    href={`tel:${contactInfo.phoneFixe}`}
+                    className="text-background/70 hover:text-primary transition-colors block text-sm"
+                  >
+                    {contactInfo.phoneFixe}
+                  </a>
+                  <span className="text-xs text-background/50">Urgences 24/7</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Mail className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <a
+                    href={`mailto:${contactInfo.email}`}
+                    className="text-background hover:text-primary transition-colors break-all text-sm"
+                  >
+                    {contactInfo.email}
+                  </a>
+                  <span className="text-xs text-background/50 block">Réponse sous 24h</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <MapPin className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <span className="text-background">{contactInfo.address}</span>
+                  <span className="text-xs text-background/50 block">Île-de-France & Grandes Villes</span>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
       </div>
-      
+
       {/* Bottom Bar */}
-      <div className="border-t border-secondary-foreground/10">
-        <div className="container mx-auto px-4 lg:px-6 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-secondary-foreground/60">
-              © {new Date().getFullYear()} HD Connect. Tous droits réservés.
-            </p>
-            <div className="flex items-center gap-4">
-              <span className="text-xs text-secondary-foreground/40">Certifications :</span>
-              <span className="text-xs font-medium bg-secondary-foreground/10 px-2 py-1 rounded">NF&A2P</span>
-              <span className="text-xs font-medium bg-secondary-foreground/10 px-2 py-1 rounded">APSAD P5</span>
-              <span className="text-xs font-medium bg-secondary-foreground/10 px-2 py-1 rounded">ISO 9001</span>
-            </div>
+      <div className="border-t border-background/10">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/60">
+            <p>© {currentYear} HD Connect. Tous droits réservés.</p>
+            <p>Conçu avec passion pour votre sécurité</p>
           </div>
         </div>
       </div>
@@ -164,3 +246,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

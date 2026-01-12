@@ -1,116 +1,196 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Bell, Camera, Eye, Wrench } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Camera, Shield, Lock, Wifi, Home, Wrench, ArrowRight, Sparkles, Radio, DoorOpen, Package } from "lucide-react";
+import { content } from "@/data/content";
+import { Link } from "react-router-dom";
+import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useParallax";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+import cameraImage from "@/assets/home-service-videosurveillance.jpg";
+import alarmImage from "@/assets/home-service-alarme.jpg";
+import accessImage from "@/assets/home-service-controle-acces.jpg";
+import maintenanceImage from "@/assets/home-service-maintenance.jpg";
+import reseauImage from "@/assets/home-service-reseau.jpg";
+import domotiqueImage from "@/assets/home-service-domotique.jpg";
+import antenneImage from "@/assets/home-service-antenne.jpg";
+import portailImage from "@/assets/home-service-portails.jpg";
+import locationImage from "@/assets/location-equipement-table.jpg";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Camera,
+  Shield,
+  Lock,
+  Wifi,
+  Home,
+  Wrench,
+  Radio,
+  DoorOpen,
+  Package,
+};
+
+const imageMap: Record<string, string> = {
+  "Vidéosurveillance": cameraImage,
+  "Systèmes d'Alarme": alarmImage,
+  "Contrôle d'Accès": accessImage,
+  "Maintenance & Dépannage": maintenanceImage,
+  "Réseau & Câblage": reseauImage,
+  "Domotique Sécurité": domotiqueImage,
+  "Antennes & Satellite": antenneImage,
+  "Portails & Parking": portailImage,
+  "Location Matériel": locationImage,
+};
+
+// Configuration des couleurs distinctives par service
+const colorMap: Record<string, { bg: string; iconBg: string; hover: string }> = {
+  "Vidéosurveillance": { 
+    bg: "from-blue-500 to-blue-600", 
+    iconBg: "bg-blue-500", 
+    hover: "hover:border-blue-400" 
+  },
+  "Systèmes d'Alarme": { 
+    bg: "from-red-500 to-red-600", 
+    iconBg: "bg-red-500", 
+    hover: "hover:border-red-400" 
+  },
+  "Contrôle d'Accès": { 
+    bg: "from-emerald-500 to-emerald-600", 
+    iconBg: "bg-emerald-500", 
+    hover: "hover:border-emerald-400" 
+  },
+  "Maintenance & Dépannage": { 
+    bg: "from-orange-500 to-orange-600", 
+    iconBg: "bg-orange-500", 
+    hover: "hover:border-orange-400" 
+  },
+  "Réseau & Câblage": { 
+    bg: "from-cyan-500 to-cyan-600", 
+    iconBg: "bg-cyan-500", 
+    hover: "hover:border-cyan-400" 
+  },
+  "Domotique Sécurité": { 
+    bg: "from-purple-500 to-purple-600", 
+    iconBg: "bg-purple-500", 
+    hover: "hover:border-purple-400" 
+  },
+  "Antennes & Satellite": { 
+    bg: "from-indigo-500 to-indigo-600", 
+    iconBg: "bg-indigo-500", 
+    hover: "hover:border-indigo-400" 
+  },
+  "Portails & Parking": { 
+    bg: "from-amber-500 to-amber-600", 
+    iconBg: "bg-amber-500", 
+    hover: "hover:border-amber-400" 
+  },
+  "Location Matériel": { 
+    bg: "from-teal-500 to-teal-600", 
+    iconBg: "bg-teal-500", 
+    hover: "hover:border-teal-400" 
+  },
+};
 
 const Services = () => {
-  const services = [
-    {
-      icon: Bell,
-      title: "Alarme Résidentielle",
-      description: "Systèmes d'alarme connectés avec détecteurs de mouvement, capteurs d'ouverture et sirène puissante. Protection complète de votre domicile.",
-      features: ["Alarme filaire ou sans fil", "Application mobile", "Détection intrusion", "Sirène 110dB"],
-      href: "/services/alarme",
-      color: "from-blue-500 to-blue-600",
-    },
-    {
-      icon: Camera,
-      title: "Vidéosurveillance",
-      description: "Caméras HD intérieures et extérieures avec vision nocturne. Surveillez votre maison en temps réel depuis votre smartphone.",
-      features: ["Caméras HD/4K", "Vision nocturne", "Stockage cloud", "Détection mouvement"],
-      href: "/services/videosurveillance",
-      color: "from-indigo-500 to-indigo-600",
-    },
-    {
-      icon: Eye,
-      title: "Télésurveillance 24/7",
-      description: "Centre de télésurveillance agréé APSAD P5. Intervention des forces de l'ordre en cas d'intrusion confirmée.",
-      features: ["Surveillance 24/7", "Levée de doute", "Intervention police", "Centre agréé"],
-      href: "/services/telesurveillance",
-      color: "from-purple-500 to-purple-600",
-    },
-    {
-      icon: Wrench,
-      title: "Dépannage Urgent",
-      description: "Intervention rapide en moins de 2h pour tout problème sur votre système de sécurité. Disponible 7j/7.",
-      features: ["Intervention 2h", "7j/7", "Pièces d'origine", "Techniciens certifiés"],
-      href: "/services/depannage",
-      color: "from-orange-500 to-orange-600",
-      urgent: true,
-    },
-  ];
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, visibleItems } = useStaggeredAnimation(content.services.items.length, 100);
+  const { scrollToSection } = useSmoothScroll();
 
   return (
-    <section className="py-20 lg:py-32 bg-background">
-      <div className="container mx-auto px-4 lg:px-6">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-label text-primary mb-4 block">Nos Services</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl text-section text-foreground mb-6">
-            Solutions de sécurité complètes pour votre maison
+    <section id="services" className="section-padding bg-secondary/30 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 pattern-dots opacity-50"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Section Header with animation */}
+        <div 
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-10 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
+          <div className="badge-accent mb-3">
+            <Sparkles className="w-4 h-4" />
+            <span>Solutions Complètes</span>
+          </div>
+          <h2 className="section-title text-center">
+            {content.services.title}
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Du diagnostic à l'installation, en passant par la maintenance, 
-            HD Connect vous accompagne pour une protection optimale.
+          <p className="section-subtitle text-center">
+            {content.services.subtitle}
           </p>
         </div>
-        
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {services.map((service, index) => (
-            <Link
-              key={index}
-              to={service.href}
-              className={`group relative bg-card rounded-2xl p-6 lg:p-8 card-hover border ${service.urgent ? 'border-accent/50' : 'border-border'}`}
-            >
-              {service.urgent && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
-                  URGENCE 24/7
+
+        {/* Services Grid with staggered animation */}
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+          {content.services.items.map((service, index) => {
+            const Icon = iconMap[service.icon] || Camera;
+            const image = imageMap[service.title];
+            const colors = colorMap[service.title] || { bg: "from-primary to-accent", iconBg: "bg-primary", hover: "hover:border-primary/30" };
+            
+            return (
+              <Card 
+                key={index} 
+                className={`group hover-lift overflow-hidden bg-card border-border/50 ${colors.hover} transition-all duration-500 flex flex-col h-full ${visibleItems[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                {/* Image with parallax hover effect */}
+                <div className="relative h-44 overflow-hidden flex-shrink-0">
+                  <img 
+                    src={image}
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent"></div>
+                  
+                  {/* Floating Icon with distinctive color */}
+                  <div className={`absolute bottom-4 left-4 w-14 h-14 rounded-2xl ${colors.iconBg} flex items-center justify-center shadow-lg shadow-black/20 transform group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300`}>
+                    <Icon className="w-7 h-7 text-white" strokeWidth={2} />
+                  </div>
                 </div>
-              )}
-              
-              {/* Icon */}
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                <service.icon className="w-7 h-7 text-white" />
-              </div>
-              
-              {/* Content */}
-              <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
-                {service.title}
-              </h3>
-              <p className="text-muted-foreground text-sm mb-6 line-clamp-3">
-                {service.description}
-              </p>
-              
-              {/* Features */}
-              <ul className="space-y-2 mb-6">
-                {service.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              
-              {/* CTA */}
-              <div className="flex items-center text-primary font-medium text-sm group-hover:gap-3 transition-all gap-2">
-                En savoir plus
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          ))}
-        </div>
-        
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-muted-foreground mb-6">
-            Vous ne savez pas quelle solution choisir ?
-          </p>
-          <Button asChild size="lg" className="btn-gradient-primary rounded-full px-8">
-            <Link to="/devis">
-              Demander un diagnostic gratuit
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </Button>
+                
+                <CardHeader className="pt-4 flex-grow">
+                  <CardTitle className="text-xl md:text-2xl group-hover:text-primary transition-colors duration-300">
+                    {service.title}
+                  </CardTitle>
+                  <CardDescription className="text-base leading-relaxed">
+                    {service.description}
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="pt-0 mt-auto">
+                  <Link to={service.link} className="w-full block">
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-center gap-2 group/btn hover:bg-primary/5 hover:text-primary transition-all duration-300"
+                    >
+                      <span>En savoir plus</span>
+                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+          
+          {/* CTA Card integrated in grid */}
+          <Card 
+            className={`group hover-lift overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 border-primary/30 hover:border-primary transition-all duration-500 flex flex-col h-full justify-center items-center text-center p-6 ${visibleItems[content.services.items.length] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: `${content.services.items.length * 100}ms` }}
+          >
+            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-primary" />
+            </div>
+            <p className="text-lg font-semibold text-foreground mb-2">
+              Projet sur mesure ?
+            </p>
+            <p className="text-muted-foreground text-sm mb-4">
+              Vous ne trouvez pas ce que vous cherchez ?
+            </p>
+            <Button 
+              size="lg"
+              onClick={() => scrollToSection("quote", { mode: "quote" })}
+              className="bg-primary hover:bg-primary/90 text-white transition-all duration-300 hover:scale-105"
+            >
+              Contactez-nous
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </Card>
         </div>
       </div>
     </section>

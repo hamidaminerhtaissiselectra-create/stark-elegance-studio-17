@@ -1,57 +1,402 @@
-import Navigation from "@/components/Navigation";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useSEO, getServiceSchema } from "@/hooks/useSEO";
-import { Wrench, CheckCircle, ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { content } from "@/data/content";
+import { Wrench, Clock, Phone, AlertTriangle, CheckCircle, Shield, Award, Zap, Users, MapPin, Truck, Home, Building2, Factory, Camera, Lock, Radio, Settings, PhoneCall, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ServiceSchema from "@/components/SEO/ServiceSchema";
+import { useSEO } from "@/hooks/useSEO";
+import AnimatedSection from "@/components/AnimatedSection";
+import ServiceHero from "@/components/ServiceHero";
+import ContentSection from "@/components/ContentSection";
+import FAQAccordion from "@/components/FAQAccordion";
+import ImageBreak from "@/components/ImageBreak";
+import RegionCoverage from "@/components/RegionCoverage";
+import CTAIntermediate from "@/components/CTAIntermediate";
+import CTAFloating from "@/components/CTAFloating";
+import ServiceLinks from "@/components/ServiceLinks";
+import LightStatsSection from "@/components/LightStatsSection";
+import ColoredAdvantagesSection from "@/components/ColoredAdvantagesSection";
+import ColoredProcessSteps from "@/components/ColoredProcessSteps";
+import TechnologiesGaranties from "@/components/TechnologiesGaranties";
+import GarantiesSection from "@/components/GarantiesSection";
+import BlogCTASection from "@/components/BlogCTASection";
+import ServiceShowcase from "@/components/ServiceShowcase";
+import heroDepannageImage from "@/assets/hero-depannage-unique.jpg";
+import depannageTechUniqueImage from "@/assets/depannage-diagnostic-work.jpg";
+import depannageUrgenceImage from "@/assets/depannage-sensor-replace.jpg";
+// Gallery-specific images (unique to ServiceShowcase)
+import galleryDepannageDiagnostic from "@/assets/gallery-depannage-diagnostic.jpg";
+import galleryDepannageRepair from "@/assets/gallery-depannage-repair.jpg";
+import galleryDepannageVan from "@/assets/gallery-depannage-van.jpg";
 
-const ServiceDepannage = () => {
+const Depannage = () => {
+  const contactInfo = content.company.contact;
+  const { scrollToSection } = useSmoothScroll();
+
   useSEO({
-    title: "Dépannage Urgent 24/7",
-    description: "Dépannage urgent de votre système d'alarme ou vidéosurveillance. Intervention en moins de 2h, 7j/7.",
-    jsonLd: getServiceSchema("Dépannage Urgent", "Service de dépannage urgent 24/7 pour systèmes de sécurité", "https://hdconnect.fr/services/depannage"),
+    title: "Alarme ou caméra en panne ? Dépannage express 4h | HD Connect",
+    description: "Votre sécurité ne peut pas attendre. Intervention sous 4h, diagnostic gratuit, techniciens certifiés 24/7. Caméras, alarmes, contrôle d'accès. Appelez maintenant !",
+    keywords: "dépannage sécurité, réparation alarme, panne caméra, dépannage vidéosurveillance, urgence sécurité, intervention rapide, HD Connect",
+    canonicalUrl: "https://hdconnect.fr/services/depannage",
   });
 
+  const breadcrumbs = [
+    { name: "Services", url: "/services" },
+    { name: "Dépannage", url: "/services/depannage" },
+  ];
+
+  const faqItems = [
+    { 
+      question: "Intervenez-vous la nuit et le week-end ?", 
+      answer: "Oui, notre service de dépannage est disponible 24h/24, 7j/7, y compris les nuits, week-ends et jours fériés. En cas d'urgence, appelez notre numéro d'astreinte pour une intervention rapide." 
+    },
+    { 
+      question: "Quel est le délai d'intervention en urgence ?", 
+      answer: "En Île-de-France, nous intervenons sous 4h maximum en cas d'urgence. Pour les autres régions, le délai est généralement de 8h à 24h selon votre localisation et la disponibilité de nos équipes." 
+    },
+    { 
+      question: "Le diagnostic est-il payant ?", 
+      answer: "Non, le diagnostic téléphonique est toujours gratuit. Nous essayons d'abord de résoudre votre problème à distance. Si une intervention sur site est nécessaire, le diagnostic sur place est facturé mais déduit du montant de la réparation." 
+    },
+    { 
+      question: "Réparez-vous les systèmes installés par d'autres ?", 
+      answer: "Oui, nous intervenons sur tous les systèmes, quelle que soit la marque ou l'installateur d'origine. Notre équipe est formée sur les principales marques du marché (Hikvision, Dahua, Ajax, Honeywell, etc.)." 
+    },
+    { 
+      question: "Comment être sûr que la panne ne reviendra pas ?", 
+      answer: "Nous identifions la cause racine de chaque panne et ne nous contentons pas de traiter les symptômes. Après chaque intervention, nous vous remettons un rapport détaillé et des recommandations pour éviter les récidives." 
+    },
+    { 
+      question: "Proposez-vous des contrats de maintenance préventive ?", 
+      answer: "Oui, nous proposons des contrats de maintenance annuels qui incluent des visites préventives régulières, des mises à jour et une priorité d'intervention en cas de panne. Consultez notre page Maintenance pour plus de détails." 
+    },
+  ];
+
+  const features = [
+    { icon: Clock, title: "Intervention sous 4h", description: "Notre équipe se déplace rapidement en cas d'urgence. En Île-de-France, nous garantissons une intervention sous 4h maximum, 7j/7." },
+    { icon: Phone, title: "Diagnostic Téléphonique Gratuit", description: "Appelez-nous pour décrire votre problème. Nos experts tentent d'abord de le résoudre à distance avant d'envoyer un technicien." },
+    { icon: Wrench, title: "Techniciens Multi-Marques", description: "Nos techniciens sont formés sur toutes les marques : Hikvision, Dahua, Ajax, Honeywell, DSC, Paradox, Axis, et bien d'autres." },
+    { icon: CheckCircle, title: "Pièces d'Origine Garanties", description: "Nous n'utilisons que des pièces d'origine constructeur pour garantir la fiabilité et la durabilité de vos réparations." },
+  ];
+
+  const processSteps = [
+    { icon: PhoneCall, title: "1. Appel Urgence", description: "Appelez notre hotline disponible 24/7. Un expert évalue votre situation et tente un diagnostic à distance immédiat." },
+    { icon: Truck, title: "2. Déplacement Express", description: "Si le problème ne peut être résolu à distance, un technicien est dépêché sur site dans les meilleurs délais." },
+    { icon: Wrench, title: "3. Diagnostic et Réparation", description: "Le technicien identifie la cause de la panne, effectue la réparation et teste l'ensemble du système." },
+    { icon: CheckCircle, title: "4. Rapport et Garantie", description: "Vous recevez un rapport d'intervention détaillé. La réparation est garantie 6 mois pièces et main d'œuvre." },
+  ];
+
+  const panneTypes = [
+    { 
+      icon: Camera, 
+      title: "Pannes Vidéosurveillance", 
+      description: "Caméra qui ne fonctionne plus, image noire ou floue, NVR/DVR en panne, perte d'accès distant, problème de réseau.",
+      problems: ["Caméra HS", "Image noire/floue", "NVR en panne", "Pas d'accès mobile", "Stockage saturé"]
+    },
+    { 
+      icon: Shield, 
+      title: "Pannes Alarme", 
+      description: "Centrale qui ne répond plus, détecteur défaillant, fausses alertes répétées, sirène muette, perte de connexion.",
+      problems: ["Centrale HS", "Fausses alertes", "Sirène muette", "Détecteur défaillant", "Batterie faible"]
+    },
+    { 
+      icon: Lock, 
+      title: "Pannes Contrôle d'Accès", 
+      description: "Badge non reconnu, interphone en panne, serrure bloquée, problème de gestion des accès.",
+      problems: ["Badge refusé", "Interphone muet", "Serrure bloquée", "Clavier HS", "Gâche défaillante"]
+    },
+    { 
+      icon: Radio, 
+      title: "Pannes Réseau & Domotique", 
+      description: "Perte de connexion, WiFi instable, switch en panne, problème d'automatisation.",
+      problems: ["Perte WiFi", "Réseau lent", "Switch HS", "Domotique déconnectée", "VPN en panne"]
+    },
+  ];
+
+  const advantages = [
+    { icon: Award, title: "Disponibilité 24/7", description: "Service d'astreinte disponible nuit et jour, week-ends et jours fériés pour les urgences critiques." },
+    { icon: Zap, title: "Réactivité Maximale", description: "Intervention sous 4h en Île-de-France. Prise en charge immédiate de votre demande par téléphone." },
+    { icon: Shield, title: "Garantie 6 Mois", description: "Toutes nos réparations sont garanties 6 mois pièces et main d'œuvre. Pas de surprise." },
+    { icon: Users, title: "Experts Certifiés", description: "Techniciens formés et certifiés par les plus grandes marques. Compétences mises à jour en continu." },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="inline-block bg-accent text-accent-foreground text-sm font-bold px-4 py-1 rounded-full mb-4">
-              URGENCE 24/7
-            </div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center">
-                <Wrench className="w-8 h-8 text-orange-500" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold">Dépannage Urgent</h1>
-                <p className="text-muted-foreground">Intervention en moins de 2h</p>
-              </div>
-            </div>
-            <p className="text-lg text-muted-foreground mb-8">
-              Votre alarme ne fonctionne plus ? Un problème sur vos caméras ? Nos techniciens interviennent en urgence 7j/7.
-            </p>
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              {["Intervention en 2h", "Disponible 7j/7", "Pièces d'origine", "Techniciens certifiés", "Devis avant intervention", "Garantie pièces et main d'œuvre"].map((f) => (
-                <div key={f} className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-orange-500" />{f}</div>
-              ))}
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              <Button asChild className="bg-orange-500 hover:bg-orange-600 rounded-full px-8">
-                <a href="tel:0800123456"><Phone className="mr-2 w-5 h-5" />Appeler maintenant</a>
-              </Button>
-              <Button asChild variant="outline" className="rounded-full px-8">
-                <Link to="/devis">Demander un rappel</Link>
-              </Button>
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
+      {/* Decorative background elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          className="absolute top-20 left-0 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/5 to-red-500/5 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-40 right-0 w-[500px] h-[500px] bg-gradient-to-tl from-amber-500/5 to-orange-500/5 rounded-full blur-3xl"
+          animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.3, 0.4] }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+      </div>
+      
+      <ServiceSchema
+        serviceName="Dépannage Systèmes de Sécurité Express 24/7"
+        serviceDescription="Dépannage urgent de systèmes de sécurité 24h/24, 7j/7. Intervention sous 4h en Île-de-France, diagnostic gratuit, techniciens certifiés multi-marques. Caméras, alarmes, contrôle d'accès."
+        serviceUrl="/services/depannage"
+        serviceImage="/assets/prestations-depannage.jpg"
+        faqItems={faqItems}
+        breadcrumbs={breadcrumbs}
+      />
+      <Header />
+      <main className="pt-0 relative z-10">
+        {/* SERVICE HERO */}
+        <ServiceHero
+          title="Dépannage Sécurité Express 24h/24, 7j/7"
+          subtitle="Dépannage Urgent"
+          description="Panne de caméra, alarme défaillante ou contrôle d'accès bloqué ? HD Connect intervient en urgence 24h/24 pour remettre votre système de sécurité en état de fonctionnement. Diagnostic gratuit par téléphone, intervention sous 4h."
+          backgroundImage={heroDepannageImage}
+          icon={<Wrench className="w-4 h-4" />}
+          badgeText="Dépannage Urgent"
+          accentColor="depannage"
+        />
+
+        {/* SECTION DESCRIPTION */}
+        <ContentSection
+          title="Votre Sécurité Ne Peut Pas Attendre"
+          badge="Intervention Express"
+          badgeIcon={<AlertTriangle className="w-4 h-4" />}
+          imagePosition="right"
+          image={depannageTechUniqueImage}
+          imageAlt="Technicien HD Connect en intervention de dépannage"
+          content={
+            <>
+              <p>
+                Une panne de votre système de sécurité vous laisse vulnérable. <strong>Chaque minute compte</strong> lorsque votre alarme est hors service ou que vos caméras ne fonctionnent plus. C'est pourquoi HD Connect a mis en place un service de dépannage express disponible 24h/24, 7j/7.
+              </p>
+              <p>
+                Notre équipe de techniciens certifiés est formée pour intervenir sur tous les types de systèmes, quelle que soit la marque ou l'installateur d'origine. Nous diagnostiquons rapidement la cause de la panne et effectuons la réparation sur place dans la majorité des cas.
+              </p>
+              <p>
+                Avant même le déplacement, nos experts tentent de <strong>résoudre votre problème par téléphone</strong>. Si une intervention sur site est nécessaire, nous vous communiquons un délai précis et un devis transparent avant toute intervention.
+              </p>
+            </>
+          }
+          delay={0}
+        />
+
+        {/* SECTION FONCTIONNALITÉS */}
+        <section className="section-padding bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <AnimatedSection animation="fade-up">
+              <h2 className="section-title text-center mb-12">
+                Notre Service Dépannage
+              </h2>
+            </AnimatedSection>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="h-full"
+                  >
+                    <Card className="hover-lift h-full card-micro-interaction border-2 border-transparent hover:border-orange-500/20">
+                      <CardHeader className="flex flex-row items-center space-x-4">
+                        <motion.div 
+                          className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg flex-shrink-0"
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                        >
+                          <Icon className="w-6 h-6 text-white" />
+                        </motion.div>
+                        <CardTitle className="text-lg">{feature.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground text-sm">{feature.description}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* IMAGE BREAK */}
+        <ImageBreak 
+          image={depannageUrgenceImage}
+          alt="Technicien effectuant un diagnostic sur un système de sécurité"
+          caption="Diagnostic complet et réparation rapide par nos experts certifiés"
+        />
+
+        {/* CTA INTERMÉDIAIRE */}
+        <CTAIntermediate 
+          title="Panne urgente ? Appelez maintenant !"
+          subtitle="Notre équipe est disponible 24h/24, 7j/7 pour intervenir rapidement."
+          phoneNumber={contactInfo.phoneMobile}
+          variant="gradient"
+          accentColor="depannage"
+          showBenefits={true}
+          urgencyText="Intervention sous 4h en IDF"
+        />
+
+        {/* STATISTIQUES CLÉS - FOND CLAIR COMME ACCUEIL */}
+        <LightStatsSection
+          title="Dépannage Express en Chiffres"
+          stats={[
+            { value: "4h", label: "Intervention", description: "délai garanti en IDF" },
+            { value: "24/7", label: "Disponibilité", description: "nuits et week-ends" },
+            { value: "6 mois", label: "Garantie", description: "sur réparations" },
+            { value: "95%", label: "Résolution", description: "dès 1ère intervention" },
+          ]}
+          variant="depannage"
+        />
+
+        {/* SECTION TYPES DE PANNES */}
+        <section className="section-padding bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <AnimatedSection animation="fade-up">
+              <h2 className="section-title text-center mb-4">
+                Types de Pannes que Nous Réparons
+              </h2>
+              <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+                Nos techniciens interviennent sur tous les types de systèmes de sécurité.
+              </p>
+            </AnimatedSection>
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {panneTypes.map((panne, index) => {
+                const Icon = panne.icon;
+                return (
+                  <AnimatedSection key={index} animation={index % 2 === 0 ? "fade-right" : "fade-left"} delay={index * 100}>
+                    <Card className="p-6 hover-lift h-full">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                          <Icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <CardTitle className="text-xl">{panne.title}</CardTitle>
+                      </div>
+                      <p className="text-muted-foreground mb-4">{panne.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {panne.problems.map((problem, i) => (
+                          <span key={i} className="text-xs px-3 py-1 bg-destructive/10 text-destructive rounded-full">
+                            {problem}
+                          </span>
+                        ))}
+                      </div>
+                    </Card>
+                  </AnimatedSection>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION AVANTAGES */}
+        <ColoredAdvantagesSection
+          title="Pourquoi Choisir HD Connect pour Votre Dépannage ?"
+          advantages={advantages}
+          accentColor="depannage"
+        />
+
+        {/* COUVERTURE RÉGIONALE */}
+        <RegionCoverage serviceName="Dépannage" serviceSlug="depannage" />
+
+        {/* 2ème CTA ORANGE - BIEN ESPACÉ */}
+        <CTAIntermediate 
+          title="Panne critique ? Appelez maintenant !"
+          subtitle="Diagnostic gratuit et intervention sous 4h en Île-de-France."
+          phoneNumber={contactInfo.phoneMobile}
+          variant="accent"
+          showBenefits={false}
+        />
+
+        {/* PROCESSUS */}
+        <ColoredProcessSteps
+          title="Votre Dépannage en 4 Étapes"
+          steps={processSteps}
+          accentColor="depannage"
+        />
+
+        {/* GALERIE IMAGES */}
+        <ServiceShowcase
+          title="Nos Interventions de Dépannage"
+          description="Découvrez nos techniciens en action : diagnostic, réparation et intervention d'urgence."
+          images={[
+            { src: galleryDepannageDiagnostic, alt: "Technicien diagnostic système alarme avec multimètre" },
+            { src: galleryDepannageRepair, alt: "Réparation caméra extérieure sur site" },
+            { src: galleryDepannageVan, alt: "Véhicule intervention dépannage HD Connect" }
+          ]}
+        />
+        <section className="section-padding bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <AnimatedSection animation="fade-up">
+              <h2 className="section-title text-center mb-12">
+                Questions Fréquentes sur le Dépannage
+              </h2>
+            </AnimatedSection>
+            <div className="max-w-3xl mx-auto">
+              <FAQAccordion items={faqItems} />
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION CTA DEVIS */}
+        <section id="quote" className="section-padding bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 relative overflow-hidden">
+          <div className="absolute inset-0 pattern-dots opacity-30"></div>
+          <div className="container mx-auto px-4 relative z-10">
+            <AnimatedSection animation="scale-in" className="max-w-3xl mx-auto text-center">
+              <h2 className="section-title text-center mb-6">
+                Besoin d'un Dépannage Rapide ?
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                Intervention sous 4h en Île-de-France. Diagnostic gratuit, devis transparent.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  onClick={() => scrollToSection("quote", { mode: "intervention" })}
+                  className="w-full sm:w-auto bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg hover:shadow-xl transition-all"
+                >
+                  <PhoneCall className="w-4 h-4 mr-2" />
+                  Demander une intervention
+                </Button>
+                <a href={`tel:${contactInfo.phoneMobile.replace(/\s/g, '')}`}>
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary text-primary hover:bg-primary/10">
+                    <Phone className="w-4 h-4 mr-2" />
+                    {contactInfo.phoneMobile}
+                  </Button>
+                </a>
+              </div>
+            </AnimatedSection>
+          </div>
+        </section>
+
+        {/* CTA FLOATING CONVERSION */}
+        <CTAFloating serviceName="système" />
+
+        {/* SECTION TECHNOLOGIES & GARANTIES */}
+        <TechnologiesGaranties variant="depannage" />
+
+        {/* SECTION GARANTIES */}
+        <GarantiesSection variant="compact" />
+
+        {/* CTA BLOG CONTEXTUEL */}
+        <BlogCTASection 
+          categories={["videosurveillance", "alarme", "conseils"]} 
+          title="Guides Dépannage et Maintenance"
+        />
+
+        {/* LIENS SERVICES */}
+        <ServiceLinks currentService="depannage" />
+      </main>
       <Footer />
     </div>
   );
 };
 
-export default ServiceDepannage;
+export default Depannage;

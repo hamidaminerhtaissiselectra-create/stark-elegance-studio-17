@@ -1,8 +1,13 @@
+# Robots.txt pour HD Connect
+# Généré automatiquement - Dernière mise à jour: 08 Janvier 2026
+
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -12,3 +17,27 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Autoriser l'indexation des pages principales
+Allow: /services/
+Allow: /zones-intervention/
+Allow: /villes/
+Allow: /blog/
+
+# Bloquer les pages techniques et non pertinentes
+Disallow: /auth
+Disallow: /admin
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /*.json$
+
+# Bloquer les paramètres de tracking
+Disallow: /*?utm_*
+Disallow: /*?ref=*
+Disallow: /*?source=*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+
+# Sitemap
+Sitemap: https://hdconnect.fr/sitemap.xml
