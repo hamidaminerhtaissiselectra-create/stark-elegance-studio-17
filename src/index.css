@@ -2,110 +2,116 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal Architecture Design System - Black & White Excellence */
+/* HD Connect - Sécurité Résidentielle Design System */
 
 @layer base {
   :root {
-    /* Pure Architecture Palette */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    /* Palette Sécurité Professionnelle */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
     
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222 47% 11%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222 47% 11%;
     
-    /* Primary: Pure Black */
-    --primary: 0 0% 0%;
+    /* Primary: Bleu Sécurité */
+    --primary: 217 91% 50%;
     --primary-foreground: 0 0% 100%;
     
-    /* Secondary: Pure White */
-    --secondary: 0 0% 100%;
-    --secondary-foreground: 0 0% 0%;
+    /* Secondary: Bleu Foncé */
+    --secondary: 222 47% 11%;
+    --secondary-foreground: 0 0% 100%;
     
-    /* Muted: Subtle Gray */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 20%;
+    /* Muted */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
     
-    /* Accent: Elegant Gray */
-    --accent: 0 0% 95%;
-    --accent-foreground: 0 0% 0%;
+    /* Accent: Orange Urgence */
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
     
-    --destructive: 0 84.2% 60.2%;
+    /* Success: Vert Confiance */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    
+    /* Warning */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 0 0% 0%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 217 91% 50%;
     
-    /* Architecture Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0% / 0.8), hsl(0 0% 0% / 0.4));
-    --gradient-overlay: linear-gradient(180deg, hsl(0 0% 0% / 0.9), hsl(0 0% 0% / 0.1));
+    /* HD Connect Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11% / 0.95), hsl(217 91% 50% / 0.8));
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 50%), hsl(217 91% 40%));
+    --gradient-accent: linear-gradient(135deg, hsl(25 95% 53%), hsl(25 95% 45%));
     
-    /* Elegant Shadows */
-    --shadow-architectural: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.15);
-    
-    /* Smooth Transitions */
-    --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-fast: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Shadows Professionnelles */
+    --shadow-card: 0 4px 6px -1px hsl(222 47% 11% / 0.1), 0 2px 4px -2px hsl(222 47% 11% / 0.1);
+    --shadow-elevated: 0 20px 25px -5px hsl(222 47% 11% / 0.1), 0 8px 10px -6px hsl(222 47% 11% / 0.1);
+    --shadow-glow: 0 0 40px hsl(217 91% 50% / 0.3);
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
     
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
     
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
     
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
     
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
     
-    --accent: 0 0% 15%;
+    --accent: 25 95% 53%;
     --accent-foreground: 0 0% 100%;
     
-    --destructive: 0 84.2% 60.2%;
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 0 0% 15%;
-    --input: 0 0% 10%;
-    --ring: 0 0% 100%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+    
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -118,34 +124,103 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
   
-  /* Architectural Typography */
-  .text-architectural {
-    @apply tracking-[-0.02em] leading-[1.1];
+  /* Typography HD Connect */
+  .text-hero {
+    @apply tracking-tight leading-[1.1] font-bold;
   }
   
-  .text-minimal {
-    @apply tracking-wide uppercase text-xs font-medium;
+  .text-section {
+    @apply tracking-tight leading-tight font-semibold;
   }
   
-  /* Hero Image Overlay */
+  .text-label {
+    @apply tracking-wide uppercase text-xs font-semibold;
+  }
+  
+  /* Hero Overlay */
   .hero-overlay {
-    background: var(--gradient-overlay);
+    background: var(--gradient-hero);
   }
   
-  /* Smooth Reveal Animation */
-  .reveal {
-    @apply opacity-0 translate-y-8;
-    animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Gradient Buttons */
+  .btn-gradient-primary {
+    background: var(--gradient-primary);
+    @apply text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300;
   }
   
-  .reveal-delayed {
-    @apply opacity-0 translate-y-8;
-    animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  .btn-gradient-accent {
+    background: var(--gradient-accent);
+    @apply text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300;
   }
   
-  @keyframes reveal {
-    to {
-      @apply opacity-100 translate-y-0;
-    }
+  /* Card Effects */
+  .card-hover {
+    @apply transition-all duration-300;
+    box-shadow: var(--shadow-card);
   }
+  
+  .card-hover:hover {
+    box-shadow: var(--shadow-elevated);
+    @apply -translate-y-1;
+  }
+  
+  /* Glow Effect */
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  /* Pulse Animation for Urgence */
+  .pulse-urgence {
+    animation: pulse-urgence 2s infinite;
+  }
+  
+  @keyframes pulse-urgence {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(25 95% 53% / 0.7); }
+    50% { box-shadow: 0 0 0 10px hsl(25 95% 53% / 0); }
+  }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/50;
 }
